@@ -63,7 +63,8 @@ cd ..
 docker-compose up -d
 
 #Wait for docker to start
-while [ "`docker inspect -f {{.State.Running}} db`" != "true" ]; do sleep 2; done 
+#Every 2 second making a request to the db. If there is an correct response it means Docker is running
+until docker exec -i db mysql -u${ROOT} -p${ROOT_PASSWORD} -e "select 1" > /dev/null 2>&1; do sleep 2; echo Waiting...; done
 
 echo Create tables
 
@@ -73,7 +74,6 @@ use $DATABASE;
 CREATE TABLE movies(
 movie_id INT NOT NULL,
 title VARCHAR(100) NOT NULL,
-year INT NOT NULL,
 PRIMARY KEY (movie_id)
 ); 
 CREATE TABLE users(
