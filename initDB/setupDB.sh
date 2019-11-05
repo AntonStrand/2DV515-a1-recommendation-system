@@ -1,27 +1,20 @@
 #!/bin/bash
 
 # Check for valid commands
-if [ $# -eq 0 ] || ["$1" != "prod" ] || [ "$1" != "dev" ]; then
-  if [ $# -eq 0 ]; then
-     echo "ERROR: No arguments supplied"
-  elif [["$1" != "prod" ] || [ "$1" != "dev" ]; then
-    echo "ERROR: $1 is an invalid argument"
-  fi
-  echo "Valid arguments"
-  echo " prod  for production"
-  echo " dev   for development"
-  exit
-fi
-
-file=../server/.env
-if [ -f "$file" ]; then
-  read -p  "WARNING: Files already exist are you sure you want to overwrite with new passwords? [Y/n] " choice
-  if [[ $choice =~ ^[Nn]$ ]]
-  then
+if [ $# -eq 0 ]; then
+  echo "ERROR: No arguments supplied"
+else
+  file=../server/.env
+  if [ -f "$file" ]; then
+    read -p  "WARNING: Files already exist are you sure you want to overwrite with new passwords? [Y/n] " choice
+    if [[ $choice =~ ^[Nn]$ ]]
+    then
       echo "Exit"
       exit
+    fi
   fi
 fi
+
 
 if [ "$1" == "prod" ]; then
   echo "Creating production credentials."
@@ -39,6 +32,12 @@ elif [ "$1" == 'dev' ]; then
   ROOT=root
   ROOT_PASSWORD=password
   DATABASE=dev
+else
+  echo "ERROR: $1 is an invalid argument"
+  echo "Valid arguments"
+  echo " prod  for production"
+  echo " dev   for development"
+  exit
 fi
 
 # Create .env settings
@@ -57,12 +56,16 @@ MYSQL_USER=$MYSQL_USERNAME
 MYSQL_PASSWORD=$MYSQL_PASSWORD
 EOF
 
+
+# MAIN
 echo "Start with: docker-compose up"
 cd ..
 docker-compose up -d
 
-# Allow docker to start
-sleep 10
+#Wait for docker to start
+while [ "`docker inspect -f {{.State.Running}} db`" != "true" ]; do sleep 2; done 
+
+echo Create tables
 
 # Adding tables to database
 docker exec -i db mysql -u${ROOT} -p${ROOT_PASSWORD} <<MYSQL
@@ -89,12 +92,11 @@ MYSQL
 function insertMovies() {
   echo "Inserting movies..."
   # Remove headline
-  cat ./initDB/$1/movies.csv | sed 1d > temp.csv
-  cat temp.csv
+  cat ./initDB/$1/movies.csv | sed 1d | cut -d";" -f1,2 > temp.csv
   # Loop through each line
-  cat temp.csv | while IFS=$';' read movie_id title year
+  cat temp.csv | while IFS=$';' read movie_id title 
   do
-    echo "INSERT IGNORE INTO movies (movie_id, title, year) VALUES ($movie_id, $title, $year);"
+    echo "INSERT IGNORE INTO movies (movie_id, title) VALUES ($movie_id, $title);"
   done | docker exec -i db mysql -u${ROOT} -p${ROOT_PASSWORD} ${DATABASE}
   echo "Movies inserted"
   rm temp.csv
@@ -103,7 +105,7 @@ function insertMovies() {
 function insertUsers() {
   echo "Inserting users..."
   # Remove headline
-  cat ./initDB/$1/users.csv | sed 1d > temp.csv
+  cat ./initDB/$1/users.csv | sed 1d | cut -d";" -f1,2 > temp.csv
   # Loop through each line
   cat temp.csv | while IFS=$';' read user_id name
   do
@@ -116,7 +118,7 @@ function insertUsers() {
 function insertRatings() {
   echo "Inserting ratings..."
   # Remove headline
-  cat ./initDB/$1/ratings.csv | sed 1d > temp.csv
+  cat ./initDB/$1/ratings.csv | sed 1d | cut -d";" -f1,2,3 > temp.csv
   # Loop through each line
   cat temp.csv | while IFS=$';' read user_id movie_id rating
   do
@@ -129,3 +131,4 @@ function insertRatings() {
 insertMovies $2
 insertUsers $2
 insertRatings $2     
+
