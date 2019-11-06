@@ -32,6 +32,7 @@ if [ "$1" == "prod" ]; then
   ROOT=$(cat /dev/urandom | LC_CTYPE=C tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
   ROOT_PASSWORD=$(cat /dev/urandom | LC_CTYPE=C tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
   DATABASE=$(cat /dev/urandom | LC_CTYPE=C tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
+  HOST=localhost
 elif [ "$1" == 'dev' ]; then
   echo "Creating development credentials."
   NODE_ENV=development
@@ -40,6 +41,7 @@ elif [ "$1" == 'dev' ]; then
   ROOT=root
   ROOT_PASSWORD=password
   DATABASE=dev
+  HOST=localhost
 else
   echo "ERROR: $1 is an invalid argument"
   echo "Valid arguments"
@@ -53,6 +55,7 @@ cat > $file <<EOF
 #!/usr/bin/env bash
 # Node
 NODE_ENV=$NODE_ENV
+HOST=$HOST
 
 # MySQL
 MYSQL_VERSION=5.7.22

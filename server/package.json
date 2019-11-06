@@ -1,0 +1,16 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "REST API for movie recommendations",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npx nodemon app.js"
+  },
+  "author": "Anton Strand",
+  "license": "ISC",
+  "dependencies": {
+    "mysql2": "^2.0.0",
+    "nodemon": "^1.19.4"
+  }
+}
