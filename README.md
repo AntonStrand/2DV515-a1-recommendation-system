@@ -11,5 +11,8 @@ The assignment description can be found here: [Assigmment 1](http://coursepress.
 4. Sit back and relax.
 5. Done.
 
-## Exit docker
+## Start Docker
+If the project has been setup all you need to do is run `docker-compose up` to start the project again after exiting it.
+
+## Exit Docker
 1. Run `docker-compose stop`.
