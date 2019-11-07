@@ -2,27 +2,15 @@ console.log('Hello from server')
 require('dotenv').config()
 const http = require('http')
 const { mount, logger, routes, methods, json } = require('paperplane')
+const mysql = require('./src/config/mysql')
 
-// const middleware = [
-//   require('redux-future2'),
-//   require('./src/utils/internalErrorMiddleware')
-// ]
-
-// const app = require('./src/routes')
+const getUsers = `select * from users;`
 
 const app = routes({
   '/': methods({
-    GET: () =>
-      json({
-        message: 'Welcome to server'
-      })
+    GET: () => mysql.execute(getUsers).then(([rows]) => json(rows))
   })
 })
-// '/users': methods({
-//   GET: request => users.getUsers(request).map(format(request))
-// }),
-// '/users/:id': methods({
-//   GET: request => users.getUser(request).map(format(request))
 
 const port = process.env.PORT || 3001
 
