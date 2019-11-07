@@ -31,7 +31,7 @@ chmod 777 scripts/generate-env.sh
 ./scripts/generate-env.sh $1 "y" $file
 
 echo "Starting docker"
-docker-compose up -d
+docker-compose up --build -d
 
 # Get env variables
 ROOT_PASSWORD=$(getEnv ROOT_PASSWORD)
