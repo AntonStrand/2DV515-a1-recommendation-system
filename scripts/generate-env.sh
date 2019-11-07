@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Set default values if not provided
-overwrite=$([ -z "$2" ] && echo "n" || echo $2)
-file=$([ -z "$3" ] && echo "../server/.env" || echo $3)
+overwrite=${2:-"n"}
+file=${3:-"../server/.env"}
 
 # Check for valid commands
 if [ $# -eq 0 ]; then
