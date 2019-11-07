@@ -1,4 +1,3 @@
-console.log('Hello from server')
 require('dotenv').config()
 const http = require('http')
 const { mount, logger, routes, methods, json } = require('paperplane')
