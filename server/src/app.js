@@ -1,7 +1,7 @@
 require('dotenv').config()
 const http = require('http')
 const { mount, logger, routes, methods, json } = require('paperplane')
-const mysql = require('./src/config/mysql')
+const mysql = require('./config/mysql')
 
 const getUsers = `select * from users;`
 

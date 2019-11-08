@@ -2,10 +2,14 @@
   "name": "server",
   "version": "1.0.0",
   "description": "REST API for movie recommendations",
-  "main": "app.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AntonStrand/2DV515-a1-recommendation-system.git"
+  },
+  "main": "src/app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npx nodemon app.js"
+    "start": "npx nodemon src/app.js"
   },
   "author": "Anton Strand",
   "license": "ISC",
