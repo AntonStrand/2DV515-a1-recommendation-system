@@ -5,9 +5,28 @@ const mysql = require('./config/mysql')
 
 const getUsers = `select * from users;`
 
+// const getUserMatchingRatings = `
+//   select title, rating from movies where
+//   select * from ratings where movie_id in (
+//     select movie_id from ratings where user_id=(select user_id from users where name='Billy')
+//   );
+// `
+
+const getAll = `select title, rating from movies inner join ratings on ratings.movie_id = movies.movie_id and ratings.user_id = (select user_id from users where name='Billy')`
+
+// const getAllMatchingMovieRatings = `select * from ratings where movie_id in (select movie_id from ratings where )`
+
+// const getAllAlsoRated = `select * from ratings where movie_id in (select movie_id from )`
+
+const get = `
+select user_id, rating from ratings
+where movie_id in (select movie_id from ratings where user_id = (select user_id from users where name='Billy'));`
+
+const getUserId = `select user_id from users where name='Billy'`
+
 const app = routes({
   '/': methods({
-    GET: () => mysql.execute(getUsers).then(([rows]) => json(rows))
+    GET: () => mysql.execute(get).then(([rows]) => json(rows))
   })
 })
 
