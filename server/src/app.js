@@ -3,30 +3,57 @@ const http = require('http')
 const { mount, logger, routes, methods, json } = require('paperplane')
 const mysql = require('./config/mysql')
 
-const getUsers = `select * from users;`
+/* pLift :: (a, b .. x -> y) -> (Promise a, Promise b, .. Promise x) -> Promise y */
+const pLift = fn => (...promises) =>
+  Promise.all(promises).then(args => fn(...args))
 
-// const getUserMatchingRatings = `
-//   select title, rating from movies where
-//   select * from ratings where movie_id in (
-//     select movie_id from ratings where user_id=(select user_id from users where name='Billy')
-//   );
-// `
+const getUsersQuery = `select * from users;`
 
-const getAll = `select title, rating from movies inner join ratings on ratings.movie_id = movies.movie_id and ratings.user_id = (select user_id from users where name='Billy')`
+const ratedMovies = `select movie_id, rating from ratings where user_id = ?`
 
-// const getAllMatchingMovieRatings = `select * from ratings where movie_id in (select movie_id from ratings where )`
+const getWhoAlsoHaveRatedSameMovies = `
+select u.name, r.rating, r.movie_id, r.user_id 
+from ratings as r
+inner join users as u on r.user_id = u.user_id
+where r.movie_id in (select movie_id from ratings where user_id=?) and r.user_id <> ?;
+`
 
-// const getAllAlsoRated = `select * from ratings where movie_id in (select movie_id from )`
+/** groupSimularity :: MovieRating -> Object -> MovieRating -> Object */
+const groupSimularity = movie => (table, rating) => {
+  if (movie.movie_id === rating.movie_id) {
+    table[rating.user_id] = {
+      name: rating.name,
+      user_id: rating.user_id,
+      simularity:
+        ((table[rating.user_id] && table[rating.user_id].simularity) || 0) +
+        (movie.rating - rating.rating) ** 2
+    }
+  }
+  return table
+}
 
-const get = `
-select user_id, rating from ratings
-where movie_id in (select movie_id from ratings where user_id = (select user_id from users where name='Billy'));`
+const euclideanDistance = ([userRatings], [otherRatings]) => {
+  const simularityTable = userRatings.reduce(
+    (table, movie) => otherRatings.reduce(groupSimularity(movie), table),
+    {}
+  )
+  return Object.values(simularityTable)
+    .map(user => ({ ...user, simularity: 1 / (1 + user.simularity) }))
+    .sort((u1, u2) => u2.simularity - u1.simularity)
+}
 
-const getUserId = `select user_id from users where name='Billy'`
+const findTopMatchingEqulideanUsers = id =>
+  pLift(euclideanDistance)(
+    mysql.execute(ratedMovies, [id]),
+    mysql.execute(getWhoAlsoHaveRatedSameMovies, [id, id])
+  )
 
 const app = routes({
-  '/': methods({
-    GET: () => mysql.execute(get).then(([rows]) => json(rows))
+  '/users': methods({
+    GET: () => mysql.query(getUsersQuery).then(([users]) => json(users))
+  }),
+  '/users/:id': methods({
+    GET: ({ params: { id } }) => findTopMatchingEqulideanUsers(id).then(json)
   })
 })
 
