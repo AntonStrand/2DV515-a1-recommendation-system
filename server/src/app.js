@@ -19,29 +19,31 @@ where r.movie_id in (select movie_id from ratings where user_id=?) and r.user_id
 `
 
 /** groupSimularity :: MovieRating -> Object -> MovieRating -> Object */
-const groupSimularity = movie => (table, rating) => {
-  if (movie.movie_id === rating.movie_id) {
-    table[rating.user_id] = {
-      name: rating.name,
-      user_id: rating.user_id,
+const groupSimularity = movie => (table, { user_id, name, ...o }) => {
+  if (movie.movie_id === o.movie_id) {
+    table[user_id] = {
+      name,
+      user_id,
       simularity:
-        ((table[rating.user_id] && table[rating.user_id].simularity) || 0) +
-        (movie.rating - rating.rating) ** 2
+        (table[`${user_id}.simularity`] || 0) + (movie.rating - o.rating) ** 2
     }
   }
   return table
 }
 
-const euclideanDistance = ([userRatings], [otherRatings]) => {
-  const simularityTable = userRatings.reduce(
+/** getSimularityTable :: ([Movie], [Movie]) -> { user_id: SimularityData } */
+const getSimularityTable = (userRatings, otherRatings) =>
+  userRatings.reduce(
     (table, movie) => otherRatings.reduce(groupSimularity(movie), table),
     {}
   )
-  return Object.values(simularityTable)
+
+const euclideanDistance = ([userRatings], [otherRatings]) =>
+  Object.values(getSimularityTable(userRatings, otherRatings))
     .map(user => ({ ...user, simularity: 1 / (1 + user.simularity) }))
     .sort((u1, u2) => u2.simularity - u1.simularity)
-}
 
+/** findTopMatchingEqulideanUsers :: Number -> [ SimularityData ] */
 const findTopMatchingEqulideanUsers = id =>
   pLift(euclideanDistance)(
     mysql.execute(ratedMovies, [id]),
