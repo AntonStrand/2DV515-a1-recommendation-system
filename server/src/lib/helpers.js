@@ -20,9 +20,13 @@ const pLift = fn => (...promises) =>
 /** roundDec2 :: Number -> Number */
 const roundDec2 = x => Math.round(x * 100) / 100
 
+/** desc :: String -> Number */
+const desc = key => (a, b) => b[key] - a[key]
+
 module.exports = {
   groupBy,
   isEmpty,
   pLift,
-  roundDec2
+  roundDec2,
+  desc
 }

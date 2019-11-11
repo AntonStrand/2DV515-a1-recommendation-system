@@ -2,11 +2,16 @@ require('dotenv').config()
 const http = require('http')
 const { mount, logger, routes, methods, json } = require('paperplane')
 const mysql = require('./config/mysql')
-const { groupBy, isEmpty, pLift, roundDec2 } = require('./lib/helpers')
+const { groupBy, isEmpty, pLift, roundDec2, desc } = require('./lib/helpers')
 
 const getUsersQuery = `SELECT * FROM users; `
 
-const ratedMovies = `select movie_id, rating from ratings where user_id = ?`
+const ratedMovies = `
+SELECT movie_id,
+       rating
+FROM   ratings
+WHERE  user_id = ?;
+`
 
 const getWhoAlsoHaveRatedSameMovies = `
 SELECT u.name,
@@ -52,9 +57,6 @@ const euclidean = (as, bs) => {
   // don't invert the value if there is no match
   return sim > 0 ? 1 / (1 + sim) : 0
 }
-
-/** desc :: String -> Number */
-const desc = key => (a, b) => b[key] - a[key]
 
 const sortedEuclidean = (user, rest) =>
   groupBy('user_id')(rest)
