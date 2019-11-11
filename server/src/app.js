@@ -15,6 +15,9 @@ inner join users as u on r.user_id = u.user_id
 where r.movie_id in (select movie_id from ratings where user_id=?) and r.user_id <> ?;
 `
 
+// const getNotSeenMovies = `select movies.title, ratings.* from movies inner join ratings on ratings.user_id <> ?;`
+const getNotSeenMovies = `select * from ratings where ratings.user_id <> ?;`
+
 /** euclidean :: ([Rating], [Rating]) -> Number */
 const euclidean = (as, bs) => {
   let sim = 0
@@ -60,7 +63,10 @@ const app = routes({
     GET: () => mysql.query(getUsersQuery).then(([users]) => json(users))
   }),
   '/users/:id': methods({
-    GET: ({ params: { id } }) => findTopMatchingEqulideanUsers(id).then(json)
+    GET: ({ params: { id } }) =>
+      mysql
+        .execute(getNotSeenMovies, [id])
+        .then(([x]) => console.log(x) || json(x)) // findTopMatchingEqulideanUsers(id).then(json)
   })
 })
 
