@@ -37,7 +37,7 @@ if [[ "$IS_DOCKER_RUNNING" == "false" ]]; then echo "You need to start Docker fi
 
 echo "Inserting movies..."
 # Format data
-  cat $DATASET_PATH/movies.csv | sed 1d | sed 's/,/;/g' | sed 's/"//g' | cut -d";" -f1,2 > temp.csv
+  cat $DATASET_PATH/movies.csv | sed 1d | sed 's/"//g' | cut -d";" -f1,2 > temp.csv
 # Loop through each line
 cat temp.csv | while IFS=$';' read movie_id title 
 do
@@ -48,7 +48,7 @@ rm temp.csv
 
 echo "Inserting users..."
 # Format data
-cat $DATASET_PATH/users.csv | sed 1d | sed 's/,/;/g' | sed 's/"//g' | cut -d";" -f1,2 > temp.csv
+cat $DATASET_PATH/users.csv | sed 1d | sed 's/"//g' | cut -d";" -f1,2 > temp.csv
 # Loop through each line
 cat temp.csv | while IFS=$';' read user_id name
 do
@@ -59,7 +59,7 @@ rm temp.csv
 
 echo "Inserting ratings..."
 # Format data
-cat $DATASET_PATH/ratings.csv | sed 1d | sed 's/,/;/g' | sed 's/"//g' | cut -d";" -f1,2,3 > temp.csv
+cat $DATASET_PATH/ratings.csv | sed 1d | sed 's/"//g' | cut -d";" -f1,2,3 > temp.csv
 # Loop through each line
 cat temp.csv | while IFS=$';' read user_id movie_id rating
 do
