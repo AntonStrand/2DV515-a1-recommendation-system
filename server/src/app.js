@@ -2,21 +2,41 @@ require('dotenv').config()
 const http = require('http')
 const { mount, logger, routes, methods, json } = require('paperplane')
 const mysql = require('./config/mysql')
-const { groupBy, isEmpty, pLift } = require('./lib/helpers')
+const { groupBy, isEmpty, pLift, roundDec2 } = require('./lib/helpers')
 
-const getUsersQuery = `select * from users;`
+const getUsersQuery = `SELECT * FROM users; `
 
 const ratedMovies = `select movie_id, rating from ratings where user_id = ?`
 
 const getWhoAlsoHaveRatedSameMovies = `
-select u.name, r.rating, r.movie_id, r.user_id 
-from ratings as r
-inner join users as u on r.user_id = u.user_id
-where r.movie_id in (select movie_id from ratings where user_id=?) and r.user_id <> ?;
+SELECT u.name,
+       r.rating,
+       r.movie_id,
+       r.user_id
+FROM   ratings AS r
+       INNER JOIN users AS u
+               ON r.user_id = u.user_id
+WHERE  r.movie_id IN (SELECT movie_id
+                      FROM   ratings
+                      WHERE  user_id = ?)
+       AND r.user_id <> ?;
 `
 
-// const getNotSeenMovies = `select movies.title, ratings.* from movies inner join ratings on ratings.user_id <> ?;`
-const getNotSeenMovies = `select * from ratings where ratings.user_id <> ?;`
+const getNotSeenMovies = `
+SELECT title,
+       r.*
+FROM   movies
+       INNER JOIN (SELECT *
+                   FROM   ratings
+                   WHERE  movie_id NOT IN (SELECT movie_id
+                                           FROM   ratings
+                                           WHERE  ratings.user_id = ?)) AS r
+               ON r.movie_id = movies.movie_id;
+`
+
+/** query :: (String, [Arguments]) -> a */
+const query = (query, args) =>
+  mysql.execute(query, args).then(([result]) => result)
 
 /** euclidean :: ([Rating], [Rating]) -> Number */
 const euclidean = (as, bs) => {
@@ -33,10 +53,10 @@ const euclidean = (as, bs) => {
   return sim > 0 ? 1 / (1 + sim) : 0
 }
 
-/** descSimularity :: (SimularityData, SimularityData) -> Number */
-const descSimularity = (u1, u2) => u2.simularity - u1.simularity
+/** desc :: String -> Number */
+const desc = key => (a, b) => b[key] - a[key]
 
-const sortedEuclidean = id => (user, rest) =>
+const sortedEuclidean = (user, rest) =>
   groupBy('user_id')(rest)
     .reduce(
       (users, u) =>
@@ -45,28 +65,55 @@ const sortedEuclidean = id => (user, rest) =>
           : users.concat({
             user_id: u[0].user_id,
             name: u[0].name,
-            simularity: euclidean(user, u)
+            simularity: roundDec2(euclidean(user, u))
           }),
       []
     )
-    .sort(descSimularity)
+    .sort(desc('simularity'))
 
 /** findTopMatchingEqulideanUsers :: Number -> [ SimularityData ] */
 const findTopMatchingEqulideanUsers = id =>
-  pLift(sortedEuclidean(id))(
-    mysql.execute(ratedMovies, [id]).then(([x]) => x),
-    mysql.execute(getWhoAlsoHaveRatedSameMovies, [id, id]).then(([x]) => x)
+  pLift(sortedEuclidean)(
+    query(ratedMovies, [id]),
+    query(getWhoAlsoHaveRatedSameMovies, [id, id])
+  )
+
+const findMovie = (users, notSeenMovies) =>
+  Object.values(
+    notSeenMovies.reduce((table, { movie_id, ...m }) => {
+      let sim = roundDec2(users.find(u => u.user_id === m.user_id).simularity)
+      const tm = table[movie_id] || { ws: 0, sim: 0 }
+      return {
+        ...table,
+        [movie_id]: {
+          movie_id,
+          title: m.title,
+          ws: roundDec2(tm.ws + m.rating * sim),
+          sim: roundDec2(tm.sim + sim)
+        }
+      }
+    }, {})
+  )
+    .map(({ title, movie_id, ws, sim }) => ({
+      title,
+      movie_id,
+      score: roundDec2(ws / sim)
+    }))
+    .sort(desc('score'))
+
+const findTopEqulideanMovies = id =>
+  pLift(findMovie)(
+    findTopMatchingEqulideanUsers(id),
+    query(getNotSeenMovies, [id])
   )
 
 const app = routes({
   '/users': methods({
-    GET: () => mysql.query(getUsersQuery).then(([users]) => json(users))
+    GET: () => query(getUsersQuery).then(json)
   }),
   '/users/:id': methods({
-    GET: ({ params: { id } }) =>
-      mysql
-        .execute(getNotSeenMovies, [id])
-        .then(([x]) => console.log(x) || json(x)) // findTopMatchingEqulideanUsers(id).then(json)
+    GET: ({ params: { id } }) => findTopEqulideanMovies(id).then(json)
+    // findTopMatchingEqulideanUsers(id).then(json)
   })
 })
 

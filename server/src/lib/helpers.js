@@ -17,8 +17,12 @@ const isEmpty = xs => xs == null || (xs != null && xs.length === 0)
 const pLift = fn => (...promises) =>
   Promise.all(promises).then(args => fn(...args))
 
+/** roundDec2 :: Number -> Number */
+const roundDec2 = x => Math.round(x * 100) / 100
+
 module.exports = {
   groupBy,
   isEmpty,
-  pLift
+  pLift,
+  roundDec2
 }
