@@ -32,10 +32,7 @@ const findMovies = (users, notSeenMovies) =>
     .map(toMovie)
     .sort(desc('score'))
 
-const findTopMoviesBy = (formula, id) =>
-  pLift(findMovies)(
-    findTopMatchingUsersBy(formula, id),
-    db.getNotSeenMovies(id)
-  )
+const findTopMoviesBy = (metric, id) =>
+  pLift(findMovies)(findTopMatchingUsersBy(metric, id), db.getNotSeenMovies(id))
 
 module.exports = findTopMoviesBy
