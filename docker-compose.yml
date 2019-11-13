@@ -16,16 +16,16 @@ services:
             - ./server:/usr/src/app
             - /usr/src/app/node_modules
 
-#  react:
-#    build: client
-#    container_name: movie-client
-#    environment:
-#      - CHOKIDAR_USEPOLLING=true
-#    volumes:
-#      - ./client:/usr/src/app
-#      - /usr/src/app/node_modules
-#    ports:
-#      - 3000:3000
+    react:
+        build: client
+        container_name: client
+        environment:
+            - CHOKIDAR_USEPOLLING=true
+        volumes:
+            - ./client:/usr/src/app
+            - /usr/src/app/node_modules
+        ports:
+            - 3000:3000
       
     mysqldb:
         image: mysql
