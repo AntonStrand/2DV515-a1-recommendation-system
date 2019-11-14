@@ -16,7 +16,7 @@ a user, using the movies large dataset (see [`/datasets/large`](https://github.c
 
 ### C-D
 - [x] Implement the Pearson Correlation similarity measure
-- [] It shall be possible to select which measure to use from the client GUI
+- [ ] It shall be possible to select which measure to use from the client GUI
 
 ### A-B
 - [ ] Implement functionality for pre-generating an Item-Based Collaborative Filtering table by
