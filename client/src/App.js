@@ -3,12 +3,16 @@ import React, { useState, useEffect } from 'react'
 
 import { getFormData } from './model'
 import Form from './components/Form'
+import { toaster } from 'evergreen-ui'
 
 function App () {
   const [formData, setFormData] = useState({ users: [], metrics: [] })
 
   useEffect(() => {
-    getFormData().then(setFormData)
+    getFormData.fork(
+      () => toaster.danger('Oops! Something went wrong'),
+      setFormData
+    )
   }, [])
 
   return (

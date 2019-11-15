@@ -1,12 +1,14 @@
+import { encaseP } from 'fluture/index'
 import axios from 'axios'
 import { API_BASE_URL } from './config'
 
-/** get :: String -> Promise a */
-const get = path =>
-  axios.get(`${API_BASE_URL}${path}`).then(result => result.data)
+const fGet = encaseP(axios.get)
 
-/** getUsers :: () -> Promise [User] */
-export const getUsers = () => get('/users')
+/** get :: String -> Future a */
+const get = path => fGet(`${API_BASE_URL}${path}`).map(result => result.data)
 
-/** getMetrics :: () -> Promise [Metric] */
-export const getMetrics = () => get('/metrics')
+/** getUsers :: Future [User] */
+export const getUsers = get('/users')
+
+/** getMetrics :: Future [Metric] */
+export const getMetrics = get('/metrics')
