@@ -28,15 +28,16 @@ a user
 (Item-Based or User-Based)
 
 ## Get started 🚀
-1. Select one of the provided datasets. (`./datasets/example`, `./datasets/large`)
-2. Run `npm install`
-    - Default `./datasets/example` is used.
-    - If you want to use `./datasets/large`; run `npm run install -- ./datasets/large`
-3. Run `npm start`
-4. 🎉  You can now visit the client at [localhost:3000](http://localhost:3000)  🎉
+Two datasets are provided. ([`./datasets/example`](https://github.com/AntonStrand/2DV515-a1-recommendation-system/tree/master/datasets/example), [`./datasets/large`](https://github.com/AntonStrand/2DV515-a1-recommendation-system/tree/master/datasets/large))
+
+1. Run `npm install`
+    > Default `./datasets/example` is used.
+    > If you want to use `./datasets/large`; run `npm run install -- ./datasets/large`
+2. Run `npm start`
+3. 🎉  You can now visit the client at [localhost:3000](http://localhost:3000)  🎉
 
 ## Scripts
-Start: `npm start`
+Start: `npm start`  
 Stop: `npm stop`
 
 ## Exit
