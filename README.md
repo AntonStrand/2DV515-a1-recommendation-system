@@ -27,18 +27,30 @@ a user
 - [ ] It shall be possible to select how to find recommendations from the client GUI
 (Item-Based or User-Based)
 
-## Get started 🚀
-Two datasets are provided. ([`./datasets/example`](https://github.com/AntonStrand/2DV515-a1-recommendation-system/tree/master/datasets/example), [`./datasets/large`](https://github.com/AntonStrand/2DV515-a1-recommendation-system/tree/master/datasets/large))
+## Available Scripts
 
-1. Run `npm install`
-    > Default `./datasets/example` is used.  
-    > If you want to use `./datasets/large`; run `npm run install -- ./datasets/large`
-2. Run `npm start`
-3. 🎉  You can now visit the client at [localhost:3000](http://localhost:3000)  🎉
+In the project directory, you can run:
 
-## Scripts
-Start: `npm start`  
-Stop: `npm stop`
+### Get started 🚀
+These script can be re-run if you want to switch data set.
 
-## Exit
-Press `ctrl + c` or run `npm stop`.
+#### `npm install`
+
+The project will use the [example](https://github.com/AntonStrand/2DV515-a1-recommendation-system/tree/master/datasets/example) data set. This is short hand for `npm run install -- ./datasets/example`
+
+#### `npm run install -- ./datasets/large`
+
+The project will use the [large](https://github.com/AntonStrand/2DV515-a1-recommendation-system/tree/master/datasets/large) data set.
+
+#### `npm start`
+
+Runs the app in the development mode.<br />
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+
+The REST API will be available at [http://localhost:3001](http://localhost:3001)
+
+Both the page and the server will reload if you make edits.<br />
+You will also see any lint errors in the console.
+
+#### `npm stop`
+You can either press `ctrl + c` or run `npm stop` to stop the docker containers.
