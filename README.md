@@ -27,13 +27,13 @@ a user
 - [ ] It shall be possible to select how to find recommendations from the client GUI
 (Item-Based or User-Based)
 
-## Get started
+## Get started 🚀
 1. Select one of the provided datasets. (`./datasets/example`, `./datasets/large`)
 2. Run `chmod 777 setup`.
 3.  - Run **development** `./setup dev {PATH_TO_DATASET}`. Eg. `./setup dev ./datasets/example`.
     - Run **production** `./setup prod {PATH_TO_DATASET}`. Eg. `./setup prod ./datasets/example`. (_More secure settings_)
 4. Sit back and relax.
-5. Done 🎉 You can now visit the client at [localhost:3000](http://localhost:3000).
+5. 🎉 You can now visit the client at [localhost:3000](http://localhost:3000) 🎉
 
 ## Start Docker
 If the project has been setup all you need to do is run `docker-compose up` to start the project again after exiting it.
