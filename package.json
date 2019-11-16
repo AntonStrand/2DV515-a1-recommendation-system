@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "preinstall": "cd client && npm install && cd ../server && npm install && cd .. && chmod 777 setup",
-    "install": "./setup dev",
+    "install": "./setup",
     "start": "docker-compose up",
     "stop": "docker-compose stop"
   },

@@ -57,6 +57,9 @@ PRIMARY KEY (user_id, movie_id)
 ); 
 MYSQL
 
+chmod 777 scripts/reset-db.sh
+./scripts/reset-db.sh $file
+
 chmod 777 scripts/populate-db.sh
 ./scripts/populate-db.sh $DATASET $file
 
