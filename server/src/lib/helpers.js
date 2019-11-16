@@ -11,8 +11,11 @@ const pLift = fn => (...promises) =>
 const propOr = def => path => o =>
   path.split('.').reduce((value, k) => (value[k] ? value[k] : def), o)
 
+const take = n => xs => (n > 0 && n < xs.length ? xs.slice(0, n) : xs)
+
 module.exports = {
   desc,
   pLift,
-  propOr
+  propOr,
+  take
 }

@@ -5,6 +5,9 @@ const { cors, mount, logger, routes, methods, json } = require('paperplane')
 const { getAllUsers } = require('./db/queries')
 const metrics = require('./models/metrics')
 const findTopMoviesBy = require('./models/topMovies')
+const findTopMatchingUsersBy = require('./models/similarUsers')
+
+const { take } = require('./lib/helpers')
 
 const app = cors(
   routes({
@@ -12,12 +15,16 @@ const app = cors(
       GET: () => getAllUsers().then(json)
     }),
     '/users/:id': methods({
-      GET: ({ params: { id } }) =>
-        findTopMoviesBy(metrics.euclidean, id).then(json)
+      GET: ({ params, query }) =>
+        findTopMatchingUsersBy(metrics[query.metric], params.id)
+          .then(take(query.limit))
+          .then(json)
     }),
-    '/pearson/:id': methods({
-      GET: ({ params: { id } }) =>
-        findTopMoviesBy(metrics.pearson, id).then(json)
+    '/movies/:id': methods({
+      GET: ({ params, query }) =>
+        findTopMoviesBy(metrics[query.metric], params.id)
+          .then(take(query.limit))
+          .then(json)
     }),
     '/metrics': methods({
       GET: () => json(Object.keys(metrics))
