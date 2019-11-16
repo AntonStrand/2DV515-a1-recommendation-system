@@ -63,8 +63,9 @@ chmod 777 scripts/reset-db.sh
 chmod 777 scripts/populate-db.sh
 ./scripts/populate-db.sh $DATASET $file
 
-echo "The project has been initialized and can be found at:"
+docker-compose stop
+
 echo ""
-echo "   Client: http://localhost:3000"
-echo "   Server: http://localhost:3001"
+echo "The project has been initialized!"
+echo "Run \"npm start\" to start the project"
 echo ""
