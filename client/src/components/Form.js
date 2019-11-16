@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import isInteger from 'crocks/predicates/isInteger'
 import tryCatch from 'crocks/Result/tryCatch'
-import Result from 'crocks/Result'
 
 import { capitalize } from '../utils'
 import { Combobox, Button, Card, TextInput, Heading } from 'evergreen-ui'
@@ -46,9 +45,6 @@ const Form = ({ formData, onSubmit }) => {
     path(['target', 'value'])
   )
 
-  console.log(state)
-  console.log(isInvalidLimit(state.limit))
-
   const submitForm = type => () =>
     onSubmit(
       tryCatch(RecommendationQuery.of)(
@@ -62,10 +58,10 @@ const Form = ({ formData, onSubmit }) => {
     <Card
       elevation={2}
       padding={24}
-      margin={24}
       display='flex'
       justifyContent='center'
       flexDirection='column'
+      background='#fefefe'
     >
       <Card flex={1} alignItems='center' display='flex' margin='auto'>
         <Heading>Search settings</Heading>
