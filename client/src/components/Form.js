@@ -1,11 +1,14 @@
 import React, { useState } from 'react'
-import ifElse from 'crocks/logic/ifElse'
 import isInteger from 'crocks/predicates/isInteger'
+import tryCatch from 'crocks/Result/tryCatch'
+import Result from 'crocks/Result'
 
 import { capitalize } from '../utils'
 import { Combobox, Button, Card, TextInput, Heading } from 'evergreen-ui'
 
-import { lensPath, set, path, compose } from 'ramda'
+import { lensProp, set, path, compose } from 'ramda'
+
+import { RecommendationType, Limit, RecommendationQuery } from '../types'
 
 const SelectBox = ({ items, onChange, title }) => (
   <Combobox
@@ -20,28 +23,41 @@ const SelectBox = ({ items, onChange, title }) => (
   />
 )
 
-const Form = ({ formData }) => {
-  const [state, setState] = useState({ valid: true, form: {} })
+const isInvalidLimit = Limit.case({ Invalid: () => true, _: () => false })
+
+const Form = ({ formData, onSubmit }) => {
+  const [state, setState] = useState({ limit: Limit.Nothing })
 
   // select :: String -> { value :: a } -> State Event
   const select = key => ({ value }) =>
-    setState(set(lensPath(['form', key]), value, state))
-
-  // updateLimit :: Boolean -> Number -> State
-  const updateLimit = isValid => limit =>
-    set(lensPath(['valid']), isValid)(
-      set(lensPath(['form', 'limit']), limit, state)
-    )
+    setState(set(lensProp(key), value, state))
 
   // setLimit :: Event -> State Event
   const setLimit = compose(
     setState,
-    ifElse(isInteger, updateLimit(true), () => updateLimit(false)()),
+    limit => set(lensProp('limit'), limit, state),
+    n =>
+      n === 0
+        ? Limit.Nothing
+        : isInteger(n) && n > 0
+          ? Limit.Valid(n)
+          : Limit.Invalid,
     Number,
     path(['target', 'value'])
   )
 
   console.log(state)
+  console.log(isInvalidLimit(state.limit))
+
+  const submitForm = type => () =>
+    onSubmit(
+      tryCatch(RecommendationQuery.of)(
+        state.user,
+        state.metric,
+        state.limit
+      ).map(type)
+    )
+
   return (
     <Card
       elevation={2}
@@ -75,7 +91,7 @@ const Form = ({ formData }) => {
         />
         <TextInput
           placeholder='Number of results'
-          isInvalid={!state.valid}
+          isInvalid={isInvalidLimit(state.limit)}
           onChange={setLimit}
         />
       </Card>
@@ -89,8 +105,12 @@ const Form = ({ formData }) => {
         margin='auto'
         flexFlow='wrap'
       >
-        <Button margin={8}>Top matching users</Button>
-        <Button margin={8}>Recommended movies</Button>
+        <Button margin={8} onClick={submitForm(RecommendationType.TopUsers)}>
+          Top matching users
+        </Button>
+        <Button margin={8} onClick={submitForm(RecommendationType.TopMovies)}>
+          Recommended movies
+        </Button>
         <Button margin={8}>Item-based recommendations</Button>
       </Card>
     </Card>
