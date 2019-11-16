@@ -69,3 +69,5 @@ echo ""
 echo "The project has been initialized!"
 echo "Run \"npm start\" to start the project"
 echo ""
+
+exit 0;
