@@ -27,7 +27,7 @@ const Form = ({ formData }) => {
   const select = key => ({ value }) =>
     setState(set(lensPath(['form', key]), value, state))
 
-  // updateLimit :: Booleam -> Number -> State
+  // updateLimit :: Boolean -> Number -> State
   const updateLimit = isValid => limit =>
     set(lensPath(['valid']), isValid)(
       set(lensPath(['form', 'limit']), limit, state)
