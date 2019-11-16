@@ -1,12 +1,17 @@
 import React, { useState, useEffect } from 'react'
-// import './App.css'
 
 import { getFormData, getRecommendations } from './model'
 import Form from './components/Form'
 import { toaster } from 'evergreen-ui'
+import MovieTable from './components/RecommendationTable'
+
+import { Recommendations } from './types'
 
 function App () {
   const [formData, setFormData] = useState({ users: [], metrics: [] })
+  const [recommendations, setRecommendations] = useState(
+    Recommendations.Default
+  )
 
   useEffect(() => {
     getFormData.fork(
@@ -23,15 +28,21 @@ function App () {
         recommendations =>
           recommendations.fork(
             () => toaster.danger('Oops! Something went wrong'),
-            console.log
+            setRecommendations
           )
       )
   }
 
   return (
-    <div className='App'>
+    <main>
+      <h1 style={{ marginLeft: '.5em' }}>A1 - Recommendations System</h1>
       <Form formData={formData} onSubmit={onSubmit} />
-    </div>
+      <br />
+      <MovieTable recommendations={recommendations} />
+      <p style={{ marginLeft: '.5em' }}>
+        Created by <a href='https://github.com/antonStrand'>Anton Strand</a>
+      </p>
+    </main>
   )
 }
 

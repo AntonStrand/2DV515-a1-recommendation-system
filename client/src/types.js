@@ -21,3 +21,10 @@ export const RecommendationType = Type({
   TopMovies: [RecommendationQuery],
   ItemBased: []
 })
+
+export const Recommendations = Type({
+  Users: [Array],
+  Movies: [Array],
+  Nothing: [],
+  Default: []
+})
