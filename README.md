@@ -5,7 +5,7 @@ The assignment description can be found here: [Assigmment 1](http://coursepress.
 
 ## Requirements
 ### Grade E
-- [ ] Build a recommendation system that can find similar users and find recommendations for
+- [x] Build a recommendation system that can find similar users and find recommendations for
 a user, using the movies large dataset (see [`/datasets/large`](https://github.com/AntonStrand/2DV515-a1-recommendation-system/tree/master/datasets/large))
 - [x] You can verify that your application works by using the example dataset from the lecture (see [`/datasets/example`](https://github.com/AntonStrand/2DV515-a1-recommendation-system/tree/master/datasets/large))
 - [x] Use Euclidean distance as similarity measure
@@ -29,14 +29,15 @@ a user
 
 ## Get started 🚀
 1. Select one of the provided datasets. (`./datasets/example`, `./datasets/large`)
-2. Run `chmod 777 setup`.
-3.  - Run **development** `./setup dev {PATH_TO_DATASET}`. Eg. `./setup dev ./datasets/example`.
-    - Run **production** `./setup prod {PATH_TO_DATASET}`. Eg. `./setup prod ./datasets/example`. (_More secure settings_)
-4. Sit back and relax.
-5. 🎉 You can now visit the client at [localhost:3000](http://localhost:3000) 🎉
+2. Run `npm install`
+    - Default `./datasets/example` is used.
+    - If you want to use `./datasets/large`; run `npm run install -- ./datasets/large`
+3. Run `npm start`
+4. 🎉  You can now visit the client at [localhost:3000](http://localhost:3000)  🎉
 
-## Start Docker
-If the project has been setup all you need to do is run `docker-compose up` to start the project again after exiting it.
+## Scripts
+Start: `npm start`
+Stop: `npm stop`
 
-## Exit Docker
-1. Run `docker-compose stop`.
+## Exit
+Press `ctrl + c` or run `npm stop`.
