@@ -1,15 +1,7 @@
 #!/bin/bash
 
-# Check for valid commands
-if [ $# -eq 0 ]; then
-  echo "ERROR: No arguments supplied"
-  echo "First param"
-  echo "prod for production"
-  echo "dev for development"
-  echo "Second param"
-  echo "Path to csv folder"
-  exit
-fi
+DATASET=${1:-"./datasets/example"}
+ENVIRONMENT=${2:-"dev"}
 
 # Check if .env-file already exists
 file=./server/.env
@@ -28,7 +20,7 @@ function getEnv() {
 
 # Generate .env
 chmod 777 scripts/generate-env.sh
-./scripts/generate-env.sh $1 "y" $file
+./scripts/generate-env.sh $ENVIRONMENT "y" $file
 
 echo "Starting docker"
 docker-compose up --build -d
@@ -66,6 +58,10 @@ PRIMARY KEY (user_id, movie_id)
 MYSQL
 
 chmod 777 scripts/populate-db.sh
-./scripts/populate-db.sh $2 $file
+./scripts/populate-db.sh $DATASET $file
 
-echo "The project has been initialized."
+echo "The project has been initialized and can be found at:"
+echo ""
+echo "   Client: http://localhost:3000"
+echo "   Server: http://localhost:3001"
+echo ""

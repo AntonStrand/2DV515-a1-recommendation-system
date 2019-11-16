@@ -1,0 +1,22 @@
+{
+  "name": "2dv515-a1-recommendation-system",
+  "version": "1.0.0",
+  "description": "My solution for 2DV515 assignment 1",
+  "main": "index.js",
+  "scripts": {
+    "preinstall": "cd client && npm install && cd ../server && npm install && cd .. && chmod 777 setup",
+    "install": "./setup dev",
+    "start": "docker-compose up",
+    "stop": "docker-compose stop"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AntonStrand/2DV515-a1-recommendation-system.git"
+  },
+  "author": "Anton Strand",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AntonStrand/2DV515-a1-recommendation-system/issues"
+  },
+  "homepage": "https://github.com/AntonStrand/2DV515-a1-recommendation-system#readme"
+}
