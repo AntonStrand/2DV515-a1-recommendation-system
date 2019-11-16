@@ -67,7 +67,8 @@ docker-compose stop
 
 echo ""
 echo "The project has been initialized!"
-echo "Run \"npm start\" to start the project"
+echo ""
+echo "Start: npm start"
 echo ""
 
 exit 0;

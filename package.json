@@ -6,8 +6,8 @@
   "scripts": {
     "preinstall": "cd client && npm install && cd ../server && npm install && cd .. && chmod 777 setup",
     "install": "./setup",
-    "start": "docker-compose up",
-    "stop": "docker-compose stop"
+    "start": "docker-compose up || exit 0",
+    "stop": "docker-compose stop || exit 0"
   },
   "repository": {
     "type": "git",
