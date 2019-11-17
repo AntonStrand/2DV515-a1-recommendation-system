@@ -1,4 +1,18 @@
 import Type from 'union-type'
+import { T } from 'ramda'
+
+export const SelectOption = Type({ of: { label: String, value: T } })
+
+/** ArrayOfSelectOption :: [a] -> Boolean */
+const ArrayOfSelectOption = xs =>
+  Array.isArray(xs) && xs.every(x => x.label != null && x.value != null)
+
+export const FormData = Type({
+  of: {
+    users: ArrayOfSelectOption,
+    metrics: ArrayOfSelectOption
+  }
+})
 
 export const Limit = Type({
   Valid: [Number],

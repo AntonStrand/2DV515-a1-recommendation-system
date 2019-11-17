@@ -27,6 +27,10 @@ const isInvalidLimit = Limit.case({ Invalid: () => true, _: () => false })
 const Form = ({ formData, onSubmit }) => {
   const [state, setState] = useState({ limit: Limit.Nothing })
 
+  console.log('formData', formData)
+  console.log('formData.users', formData.users)
+  console.log('formData.metrics', formData.metrics)
+
   // select :: String -> { value :: a } -> State Event
   const select = key => ({ value }) =>
     setState(set(lensProp(key), value, state))

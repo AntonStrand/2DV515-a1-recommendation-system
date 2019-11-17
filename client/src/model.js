@@ -5,18 +5,20 @@ import map from 'crocks/pointfree/map'
 import ifElse from 'crocks/logic/ifElse'
 import isEmpty from 'crocks/predicates/isEmpty'
 
-import { RecommendationType, Limit, Recommendations } from './types'
-
-/** FormData :: { users :: [{ label::String, value::Number }], metrics :: [{ label::String, value::String }] } */
-
-/** selectOption :: (String, a) -> ({ label :: String, value :: a }) */
-const selectOption = (label, value) => ({ label, value })
+import {
+  RecommendationType,
+  Limit,
+  Recommendations,
+  SelectOption,
+  FormData
+} from './types'
 
 /** toFormData :: [User] -> [String] -> FormData */
-const toFormData = users => metrics => ({
-  users: users.map(u => selectOption(u.name, u.user_id)),
-  metrics: metrics.map(s => selectOption(s, s))
-})
+const toFormData = users => metrics =>
+  FormData.of(
+    users.map(u => SelectOption.of(u.name, u.user_id)),
+    metrics.map(s => SelectOption.of(s, s))
+  )
 
 /** getFormData :: Future FromData */
 export const getFormData = liftA2(toFormData, api.getUsers, api.getMetrics)

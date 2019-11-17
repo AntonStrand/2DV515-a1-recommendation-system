@@ -5,10 +5,10 @@ import Form from './components/Form'
 import { toaster } from 'evergreen-ui'
 import MovieTable from './components/RecommendationTable'
 
-import { Recommendations } from './types'
+import { Recommendations, FormData } from './types'
 
 function App () {
-  const [formData, setFormData] = useState({ users: [], metrics: [] })
+  const [formData, setFormData] = useState(FormData.of([], []))
   const [recommendations, setRecommendations] = useState(
     Recommendations.Default
   )
