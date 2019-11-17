@@ -3,9 +3,13 @@ import React, { useState, useEffect } from 'react'
 import { getFormData, getRecommendations } from './model'
 import Form from './components/Form'
 import { toaster } from 'evergreen-ui'
-import MovieTable from './components/RecommendationTable'
+import RecommendationTable from './components/RecommendationTable'
+import { fork } from 'fluture/index'
 
 import { Recommendations, FormData } from './types'
+
+const danger = msg => () => toaster.danger(msg)
+const warning = msg => () => toaster.warning(msg)
 
 function App () {
   const [formData, setFormData] = useState(FormData.of([], []))
@@ -14,31 +18,23 @@ function App () {
   )
 
   useEffect(() => {
-    getFormData.fork(
-      () => toaster.danger('Oops! Something went wrong'),
-      setFormData
-    )
+    getFormData.fork(danger('Oops! Something went wrong'), setFormData)
   }, [])
 
-  function onSubmit (result) {
+  const onSubmit = result =>
     result
       .map(getRecommendations)
       .either(
-        _ => toaster.warning('The form is not correctly entered'),
-        recommendations =>
-          recommendations.fork(
-            () => toaster.danger('Oops! Something went wrong'),
-            setRecommendations
-          )
+        warning('The form is not correctly entered'),
+        fork(danger('Oops! Something went wrong'), setRecommendations)
       )
-  }
 
   return (
     <main>
       <h1 style={{ marginLeft: '.5em' }}>A1 - Recommendations System</h1>
       <Form formData={formData} onSubmit={onSubmit} />
       <br />
-      <MovieTable recommendations={recommendations} />
+      <RecommendationTable recommendations={recommendations} />
       <p style={{ marginLeft: '.5em' }}>
         Created by <a href='https://github.com/antonStrand'>Anton Strand</a>
       </p>
