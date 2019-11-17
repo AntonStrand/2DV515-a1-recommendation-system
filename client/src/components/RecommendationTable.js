@@ -38,11 +38,11 @@ const MovieTable = movies => (
 const UserTable = users => (
   <TableTemplate
     heading='Users'
-    headerText={['Name', 'ID', 'Simularity']}
+    headerText={['Name', 'ID', 'Similarity']}
     rows={users.map(u => ({
       title: u.name,
       id: u.user_id,
-      score: u.simularity
+      score: u.similarity
     }))}
   />
 )

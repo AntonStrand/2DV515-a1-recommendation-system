@@ -13,9 +13,9 @@ const toMovie = ({ title, movie_id, ws, sim }) => ({
 const findMovies = (users, notSeenMovies) =>
   Object.values(
     notSeenMovies.reduce((table, { movie_id, ...m }) => {
-      let sim = users.find(u => u.user_id === m.user_id).simularity
+      let sim = users.find(u => u.user_id === m.user_id).similarity
       const tm = table[movie_id] || { ws: 0, sim: 0 }
-      // Guard against 0 or negative simularities
+      // Guard against 0 or negative similarities
       return sim <= 0
         ? table
         : {

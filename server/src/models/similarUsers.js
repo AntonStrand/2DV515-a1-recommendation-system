@@ -19,20 +19,20 @@ const groupRatingsAsUsers = ratings =>
     )
   )
 
-/** toSimularityData :: ([Rating] -> Number) -> User -> SimularityData */
-const toSimularityData = metric => u => ({
+/** toSimilarityData :: ([Rating] -> Number) -> User -> SimilarityData */
+const toSimilarityData = metric => u => ({
   user_id: u.user_id,
   name: u.name,
-  simularity: metric(u.ratings)
+  similarity: metric(u.ratings)
 })
 
-/** sortedMetric :: ([Rating] -> [Rating] -> Number) -> ([Rating], [Rating]) -> [SimularityData] */
+/** sortedMetric :: ([Rating] -> [Rating] -> Number) -> ([Rating], [Rating]) -> [SimilarityData] */
 const sortedMetric = metric => (user, rest) =>
   groupRatingsAsUsers(rest)
-    .map(toSimularityData(metric(user)))
-    .sort(desc('simularity'))
+    .map(toSimilarityData(metric(user)))
+    .sort(desc('similarity'))
 
-/** findTopMatchingUsersBy :: (([Rating] -> [Rating] -> Number), Number) -> [SimularityData] */
+/** findTopMatchingUsersBy :: (([Rating] -> [Rating] -> Number), Number) -> [similarityData] */
 const findTopMatchingUsersBy = (metric, id) =>
   pLift(sortedMetric(metric))(
     db.getRatedMovies(id),
