@@ -19,12 +19,12 @@ a user, using the movies large dataset (see [`/datasets/large`](https://github.c
 - [x] It shall be possible to select which measure to use from the client GUI
 
 ### Grade A-B
-- [ ] Implement functionality for pre-generating an Item-Based Collaborative Filtering table by
+- [x] Implement functionality for pre-generating an Item-Based Collaborative Filtering table by
 transforming the original data set
-- [ ] Use the pre-generated table to implement a second way of finding recommendations for
+- [x] Use the pre-generated table to implement a second way of finding recommendations for
 a user
-- [ ] You shall only use Euclidean distance as similarity measure
-- [ ] It shall be possible to select how to find recommendations from the client GUI
+- [x] You shall only use Euclidean distance as similarity measure
+- [x] It shall be possible to select how to find recommendations from the client GUI
 (Item-Based or User-Based)
 
 ## Available Scripts
