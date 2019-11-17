@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import isInteger from 'crocks/predicates/isInteger'
+import unless from 'crocks/logic/unless'
 import tryCatch from 'crocks/Result/tryCatch'
 
 import { capitalize } from '../utils'
@@ -24,12 +25,15 @@ const SelectBox = ({ items, onChange, title }) => (
 
 const isInvalidLimit = Limit.case({ Invalid: () => true, _: () => false })
 
+const isUint = x => isInteger(x) && x > 0
+const isEmpty = x => x.length === 0
+
+// limitOf :: a -> Limit
+const limitOf = n =>
+  isUint(n) ? Limit.Valid(n) : isEmpty(n) ? Limit.Nothing : Limit.Invalid
+
 const Form = ({ formData, onSubmit }) => {
   const [state, setState] = useState({ limit: Limit.Nothing })
-
-  console.log('formData', formData)
-  console.log('formData.users', formData.users)
-  console.log('formData.metrics', formData.metrics)
 
   // select :: String -> { value :: a } -> State Event
   const select = key => ({ value }) =>
@@ -39,13 +43,8 @@ const Form = ({ formData, onSubmit }) => {
   const setLimit = compose(
     setState,
     limit => set(lensProp('limit'), limit, state),
-    n =>
-      n === 0
-        ? Limit.Nothing
-        : isInteger(n) && n > 0
-          ? Limit.Valid(n)
-          : Limit.Invalid,
-    Number,
+    limitOf,
+    unless(isEmpty, Number),
     path(['target', 'value'])
   )
 
