@@ -41,10 +41,26 @@ FROM   movies
                ON r.movie_id = movies.movie_id;
 `
 
+const similarMovies = `
+SELECT title, 
+       r.* 
+FROM   movies 
+       INNER JOIN (SELECT * 
+                   FROM   item_based 
+                   WHERE  similar_to IN (SELECT movie_id 
+                                         FROM   ratings 
+                                         WHERE  ratings.user_id = ?) 
+                          AND movie_id NOT IN (SELECT movie_id 
+                                               FROM   ratings 
+                                               WHERE  ratings.user_id = ?)) AS r 
+               ON r.movie_id = movies.movie_id; 
+`
+
 module.exports = {
   getAllUsers: () => query(allUsers),
   getRatedMovies: id => query(ratedMovies, [id]),
+  getNotSeenMovies: id => query(notSeenMovies, [id]),
+  getSimilarMovies: id => query(similarMovies, [id, id]),
   getWhoAlsoHaveRatedSameMovies: id =>
-    query(whoAlsoHaveRatedSameMovies, [id, id]),
-  getNotSeenMovies: id => query(notSeenMovies, [id])
+    query(whoAlsoHaveRatedSameMovies, [id, id])
 }
