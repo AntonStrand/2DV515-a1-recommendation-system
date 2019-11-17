@@ -4,7 +4,7 @@
   "description": "My solution for 2DV515 assignment 1",
   "main": "index.js",
   "scripts": {
-    "preinstall": "cd client && npm install && cd ../server && npm install && cd .. && chmod 777 setup",
+    "preinstall": "cd scripts && npm install && cd ../client && npm install && cd ../server && npm install && cd .. && chmod 777 setup",
     "install": "./setup",
     "start": "docker-compose up || exit 0",
     "stop": "docker-compose stop || exit 0"

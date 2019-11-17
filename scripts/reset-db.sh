@@ -26,4 +26,5 @@ docker exec -i db mysql -u${ROOT} -p${ROOT_PASSWORD} ${DATABASE} <<MYSQL
 TRUNCATE movies;
 TRUNCATE users;
 TRUNCATE ratings;
+TRUNCATE item_based;
 MYSQL

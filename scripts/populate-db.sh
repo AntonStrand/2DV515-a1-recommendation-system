@@ -67,3 +67,10 @@ do
 done | docker exec -i db mysql -u${ROOT} -p${ROOT_PASSWORD} ${DATABASE}
 echo "Ratings inserted"
 rm temp.csv
+
+echo "Generate item-based recommendations"
+node ./scripts/generateItemBased.js $ROOT $ROOT_PASSWORD $DATABASE
+
+echo ""
+echo "The database has been populated!"
+echo ""

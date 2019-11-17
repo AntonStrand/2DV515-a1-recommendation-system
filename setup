@@ -14,6 +14,11 @@ if [ -f "$file" ]; then
   fi
 fi
 
+if [[ -d "db_data" ]]; then
+  echo "Removing old database folders"
+  rm -rf db_data
+fi
+
 function getEnv() {
   grep $1 $file | cut -d '=' -f2 | sed -n 1p
 }
@@ -38,23 +43,41 @@ echo Create tables
 
 # Adding tables to database
 docker exec -i db mysql -u${ROOT} -p${ROOT_PASSWORD} <<MYSQL
-use $DATABASE;
-CREATE TABLE IF NOT EXISTS movies(
-movie_id INT NOT NULL,
-title VARCHAR(100) NOT NULL,
-PRIMARY KEY (movie_id)
-); 
-CREATE TABLE IF NOT EXISTS users(
-user_id INT NOT NULL,
-name VARCHAR(100) NOT NULL,
-PRIMARY KEY (user_id)
-); 
-CREATE TABLE IF NOT EXISTS ratings(
-user_id INT NOT NULL,
-movie_id INT NOT NULL,
-rating FLOAT(2,1) NOT NULL,
-PRIMARY KEY (user_id, movie_id)
-); 
+USE $DATABASE; 
+
+CREATE TABLE IF NOT EXISTS movies 
+  ( 
+     movie_id INT NOT NULL, 
+     title    VARCHAR(100) NOT NULL, 
+     INDEX(movie_id, title), 
+     PRIMARY KEY (movie_id) 
+  ); 
+
+CREATE TABLE IF NOT EXISTS users 
+  ( 
+     user_id INT NOT NULL, 
+     name    VARCHAR(100) NOT NULL, 
+     INDEX(user_id, name), 
+     PRIMARY KEY (user_id) 
+  ); 
+
+CREATE TABLE IF NOT EXISTS ratings 
+  ( 
+     user_id  INT NOT NULL, 
+     movie_id INT NOT NULL, 
+     rating   FLOAT(2, 1) NOT NULL, 
+     INDEX(user_id, movie_id, rating), 
+     PRIMARY KEY (user_id, movie_id) 
+  ); 
+
+CREATE TABLE IF NOT EXISTS item_based 
+  ( 
+     movie_id   INT NOT NULL, 
+     similar_to INT NOT NULL, 
+     similarity FLOAT NOT NULL, 
+     INDEX(movie_id, similar_to, similarity), 
+     PRIMARY KEY (movie_id, similar_to) 
+  ); 
 MYSQL
 
 chmod 777 scripts/reset-db.sh
