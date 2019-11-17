@@ -28,7 +28,10 @@ const endpoints = {
     GET: () => json(Object.keys(metrics))
   }),
   '/item-based/:id': methods({
-    GET: ({ params }) => findTopMoviesFor(params.id).then(json)
+    GET: ({ params, query }) =>
+      findTopMoviesFor(params.id)
+        .then(take(query.limit))
+        .then(json)
   })
 }
 

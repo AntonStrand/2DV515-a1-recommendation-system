@@ -24,11 +24,14 @@ const toFormData = users => metrics =>
 export const getFormData = liftA2(toFormData, api.getUsers, api.getMetrics)
 
 /** getLimitQuery :: Limit -> String */
-const getLimitQuery = Limit.case({ Valid: v => `&limit=${v}`, _: () => '' })
+const getLimitQuery = (delimiter, limit) =>
+  limit.case({ Valid: v => `${delimiter}limit=${v}`, _: () => '' })
 
 /** requestRecommendations :: String -> Object -> Future [Object] */
 const requestRecommendations = route => q =>
-  api.get(`${route}/${q.userId}?metric=${q.metric}${getLimitQuery(q.limit)}`)
+  api.get(
+    `${route}/${q.userId}?metric=${q.metric}${getLimitQuery('&', q.limit)}`
+  )
 
 /** setRecommendationType :: Recommendations -> [a] -> Recommendations */
 const setRecommendationType = ifElse(isEmpty, () => Recommendations.Nothing)
@@ -43,8 +46,8 @@ export const getRecommendations = RecommendationType.case({
     map(setRecommendationType(Recommendations.Movies)),
     requestRecommendations('/movies')
   ),
-  ItemBased: id =>
+  ItemBased: q =>
     api
-      .get('/item-based/' + id)
+      .get('/item-based/' + q.userId + getLimitQuery('?', q.limit))
       .map(setRecommendationType(Recommendations.Movies))
 })

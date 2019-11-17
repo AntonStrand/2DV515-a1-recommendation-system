@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 import { Table, Card, Heading } from 'evergreen-ui'
 
 const Message = msg => () => <Heading align='center'>{msg}</Heading>
