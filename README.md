@@ -4,7 +4,7 @@ My solution for Web intelligence (2DV515) assignment 1 at Linnaeus University.
 The assignment description can be found here: [Assigmment 1](http://coursepress.lnu.se/kurs/web-intelligence/a1/)
 
 ## Requirements
-### Grade E
+### Grade E ✨ 
 - [x] Build a recommendation system that can find similar users and find recommendations for
 a user, using the movies large dataset (see [`/datasets/large`](https://github.com/AntonStrand/2DV515-a1-recommendation-system/tree/master/datasets/large))
 - [x] You can verify that your application works by using the example dataset from the lecture (see [`/datasets/example`](https://github.com/AntonStrand/2DV515-a1-recommendation-system/tree/master/datasets/large))
@@ -14,11 +14,11 @@ a user, using the movies large dataset (see [`/datasets/large`](https://github.c
     - [x] the server responds with json data
     - [x] the json data is decoded and presented in a client GUI
 
-### Grade C-D
+### Grade C-D 👏 
 - [x] Implement the Pearson Correlation similarity measure
 - [x] It shall be possible to select which measure to use from the client GUI
 
-### Grade A-B
+### Grade A-B 🎉
 - [ ] Implement functionality for pre-generating an Item-Based Collaborative Filtering table by
 transforming the original data set
 - [ ] Use the pre-generated table to implement a second way of finding recommendations for
