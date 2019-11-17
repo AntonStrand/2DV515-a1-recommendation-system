@@ -6,7 +6,7 @@ import tryCatch from 'crocks/Result/tryCatch'
 import { capitalize } from '../utils'
 import { Combobox, Button, Card, TextInput, Heading } from 'evergreen-ui'
 
-import { lensProp, set, path, compose } from 'ramda'
+import { lensProp, set, path, compose, __ } from 'ramda'
 
 import { RecommendationType, Limit, RecommendationQuery } from '../types'
 
@@ -42,7 +42,7 @@ const Form = ({ formData, onSubmit }) => {
   // setLimit :: Event -> State Event
   const setLimit = compose(
     setState,
-    limit => set(lensProp('limit'), limit, state),
+    set(lensProp('limit'), __, state),
     limitOf,
     unless(isEmpty, Number),
     path(['target', 'value'])
