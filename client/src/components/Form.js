@@ -110,7 +110,14 @@ const Form = ({ formData, onSubmit }) => {
         <Button margin={8} onClick={submitForm(RecommendationType.TopMovies)}>
           Recommended movies
         </Button>
-        <Button margin={8}>Item-based recommendations</Button>
+        <Button
+          margin={8}
+          onClick={() =>
+            onSubmit(tryCatch(RecommendationType.ItemBased)(state.user))
+          }
+        >
+          Item-based recommendations
+        </Button>
       </Card>
     </Card>
   )

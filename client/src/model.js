@@ -43,5 +43,8 @@ export const getRecommendations = RecommendationType.case({
     map(setRecommendationType(Recommendations.Movies)),
     requestRecommendations('/movies')
   ),
-  ItemBased: _ => console.log('ItemBased')
+  ItemBased: id =>
+    api
+      .get('/item-based/' + id)
+      .map(setRecommendationType(Recommendations.Movies))
 })

@@ -33,7 +33,7 @@ export const RecommendationQuery = Type({
 export const RecommendationType = Type({
   TopUsers: [RecommendationQuery],
   TopMovies: [RecommendationQuery],
-  ItemBased: []
+  ItemBased: [Number]
 })
 
 export const Recommendations = Type({
