@@ -56,7 +56,7 @@ const groupRatingsAsMovies = ratings =>
 
 /** *** LOGIC *** **/
 
-/** euclidean :: [Rating] -> [Rating] -> Number */
+/** euclidean :: ([Rating], [Rating]) -> Number */
 const euclidean = (as, bs) => {
   let sim = 0
 
