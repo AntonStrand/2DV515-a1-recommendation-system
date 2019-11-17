@@ -7,7 +7,6 @@ import isEmpty from 'crocks/predicates/isEmpty'
 
 import {
   RecommendationType,
-  Limit,
   Recommendations,
   SelectOption,
   FormData
